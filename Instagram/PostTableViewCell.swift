@@ -77,7 +77,7 @@ class PostTableViewCell: UITableViewCell ,UITableViewDelegate, UITableViewDataSo
             self.likeButton.setImage(buttonImage, for: .normal)
         }
         if Auth.auth().currentUser != nil {
-            if self.observing == false {
+            //if self.observing == false {
                 // 要素が追加されたらpostArrayに追加してTableViewを再表示する
                 let commentRef = Database.database().reference().child(Const.PostPath).child("\(postData.id!)").child("comments").queryOrdered(byChild: "time")
                 commentRef.observe(.childAdded, with: { snapshot in
@@ -126,7 +126,7 @@ class PostTableViewCell: UITableViewCell ,UITableViewDelegate, UITableViewDataSo
                 // trueとする
                 observing = true
             }
-        } else {
+        //} else {
             if observing == true {
                 // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
                 // テーブルをクリアする
@@ -139,7 +139,8 @@ class PostTableViewCell: UITableViewCell ,UITableViewDelegate, UITableViewDataSo
                 // falseとする
                 observing = false
             }
-        }
+            
+        //}
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return commentArray.count

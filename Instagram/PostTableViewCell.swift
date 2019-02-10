@@ -44,7 +44,7 @@ class PostTableViewCell: UITableViewCell ,UITableViewDelegate, UITableViewDataSo
         tableView.rowHeight = UITableView.automaticDimension
         // テーブル行の高さの概算値を設定しておく
         // 高さ概算値 = 「縦横比1:1のUIImageViewの高さ(=画面幅)」+「いいねボタン、キャプションラベル、その他余白の高さの合計概算(=100pt)」
-        tableView.estimatedRowHeight = 100
+        tableView.estimatedRowHeight = 200
         
     }
 
@@ -76,11 +76,10 @@ class PostTableViewCell: UITableViewCell ,UITableViewDelegate, UITableViewDataSo
             let buttonImage = UIImage(named: "like_none")
             self.likeButton.setImage(buttonImage, for: .normal)
         }
-        
         if Auth.auth().currentUser != nil {
             if self.observing == false {
                 // 要素が追加されたらpostArrayに追加してTableViewを再表示する
-                let commentRef = Database.database().reference().child(Const.PostPath).child("\(postData.id!)").child("comments")
+                let commentRef = Database.database().reference().child(Const.PostPath).child("\(postData.id!)").child("comments").queryOrdered(byChild: "time")
                 commentRef.observe(.childAdded, with: { snapshot in
                     print("DEBUG_PRINT: .childAddedイベントが発生しました。")
                     // PostDataクラスを生成して受け取ったデータを設定する
@@ -149,7 +148,7 @@ class PostTableViewCell: UITableViewCell ,UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // セルを取得してデータを設定する
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell2", for: indexPath) as! CommentTableViewCell
-        cell.setComment(commentArray[indexPath.row])
+        cell.setComment(commentArray.reversed()[indexPath.row])
         
         return cell
     }
